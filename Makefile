@@ -62,3 +62,7 @@ test: lint
 .PHONY: release
 release: lint test
 	BINARY=${BINARY} VERSION=${VERSION} ./dist.sh
+
+.PHONY: local-env-%
+local-env-%:
+	make -C contrib/local-environment $*

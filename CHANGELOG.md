@@ -22,9 +22,17 @@
 - [#487](https://github.com/oauth2-proxy/oauth2-proxy/pull/487) Switch flags to StringSlice instead of StringArray
   - Options that take multiple arguments now split strings on commas if present
   - Eg `--foo=a,b,c,d` would result in the values `a`, `b`, `c` and `d` instead of a single `a,b,c,d` value as before
+- [#537](https://github.com/oauth2-proxy/oauth2-proxy/pull/537) Drop Fallback to Email if User not set
+  - Previously, when a session was loaded, if the User was not set, it would be replaced by the Email.
+    This behaviour was inconsistent as it required the session to be stored and then loaded to function properly.
+  - This behaviour has now been removed and the User field will remain empty if it was not set when the session was saved.
+  - In some scenarios `X-Forwarded-User` will now be empty. Use `X-Forwarded-Email` instead.
+  - In some scenarios, this may break setting Basic Auth on upstream or responses.
+    Use `--prefer-email-to-user` to restore falling back to the Email in these cases.
 
 ## Changes since v5.1.1
 
+- [#537](https://github.com/oauth2-proxy/oauth2-proxy/pull/537) Drop Fallback to Email if User not set (@JoelSpeed)
 - [#487](https://github.com/oauth2-proxy/oauth2-proxy/pull/487) Switch flags to PFlag to remove StringArray (@JoelSpeed)
 - [#484](https://github.com/oauth2-proxy/oauth2-proxy/pull/484) Replace configuration loading with Viper (@JoelSpeed)
 - [#499](https://github.com/oauth2-proxy/oauth2-proxy/pull/499) Add `-user-id-claim` to support generic claims in addition to email (@holyjak)

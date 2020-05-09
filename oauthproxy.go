@@ -1048,7 +1048,10 @@ func (p *OAuthProxy) addHeadersForProxying(rw http.ResponseWriter, req *http.Req
 		}
 	}
 	if p.SetBasicAuth {
-		if session.User != "" {
+		if p.PreferEmailToUser && session.Email != "" {
+			authVal := b64.StdEncoding.EncodeToString([]byte(session.Email + ":" + p.BasicAuthPassword))
+			rw.Header().Set("Authorization", "Basic "+authVal)
+		} else if session.User != "" {
 			authVal := b64.StdEncoding.EncodeToString([]byte(session.User + ":" + p.BasicAuthPassword))
 			rw.Header().Set("Authorization", "Basic "+authVal)
 		} else {
